@@ -28,15 +28,35 @@ label {
     margin-bottom: 8px;
 }
 
-input {
-    width: calc(100% - 16px); /* Adjusted width for padding */
+/* Style for dropdown lists */
+select {
+    width: calc(100% - 26px); /* Adjusted width for padding */
     padding: 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    appearance: none; /* Remove default arrow in some browsers */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none; /* Remove default outline in some browsers */
 }
 
+/* Style for submit button */
 input[type="submit"] {
     background-color: #4caf50;
     color: #fff;
     cursor: pointer;
+    border: none;
+    padding: 10px;
+    border-radius: 25px;
+}
+
+/* Style for button in the top-left corner */
+button {
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 7px;
+    border-radius: 10px;
 }

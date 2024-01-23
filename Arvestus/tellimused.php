@@ -22,7 +22,7 @@ if ($result->num_rows > 0) {
 }
 
 // Handle form submission to get order status by name
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nimi'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nimi']) && !empty($_POST['nimi'])) {
     $nimi = $_POST['nimi'];
 
     // Filter orders with the provided name
@@ -76,17 +76,19 @@ $conn->close();
 
 <!-- Display all orders if no name is searched -->
 <?php
-foreach ($orders as $order) {
-    echo '<div class="order-container">';
-    echo "Tellimuse number: " . $order['orderNumber'] . "<br>";
-    echo "Nimi: " . $order['nimi'] . "<br>";
-    echo "E-mail: " . $order['email'] . "<br>";
-    echo "Mustri number: " . $order['mustrinr'] . "<br>";
-    echo "On lõigatud: " . $order['onloigatud'] . "<br>";
-    echo "On värvitud: " . $order['onvarvitud'] . "<br>";
-    echo "On komplekteeritud: " . $order['onkomplekteeritud'] . "<br>";
-    echo "</div>";
-    echo "<hr>";
+if (empty($_POST['nimi'])) {
+    foreach ($orders as $order) {
+        echo '<div class="order-container">';
+        echo "Tellimuse number: " . $order['orderNumber'] . "<br>";
+        echo "Nimi: " . $order['nimi'] . "<br>";
+        echo "E-mail: " . $order['email'] . "<br>";
+        echo "Mustri number: " . $order['mustrinr'] . "<br>";
+        echo "On lõigatud: " . $order['onloigatud'] . "<br>";
+        echo "On värvitud: " . $order['onvarvitud'] . "<br>";
+        echo "On komplekteeritud: " . $order['onkomplekteeritud'] . "<br>";
+        echo "</div>";
+        echo "<hr>";
+    }
 }
 
 // Add a button in the top-left corner to link to "tellimu.php"
@@ -95,4 +97,3 @@ echo '<button onclick="location.href=\'tellimus.php\'" style="position: absolute
 
 </body>
 </html>
-

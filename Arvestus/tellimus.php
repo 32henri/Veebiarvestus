@@ -42,10 +42,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $orderNumber = generateOrderNumber();
         $tellimus = new Tellimus($orderNumber, $nimi, $email, $mustrinr);
+        
+        // Default values
+        $onloigatud_default = 'Ei';
+        $onvarvitud_default = 'Ei';
+        $onkomplekteeritud_default = 'Ei';
 
-        // Save order to the database
+        // Save order to the database with default values
         $sql = "INSERT INTO rulood (orderNumber, nimi, email, mustrinr, onloigatud, onvarvitud, onkomplekteeritud)
-        VALUES ('$tellimus->orderNumber', '$tellimus->nimi', '$tellimus->email', '$tellimus->mustrinr', '$tellimus->onloigatud', '$tellimus->onvarvitud', '$tellimus->onkomplekteeritud')";
+        VALUES ('$tellimus->orderNumber', '$tellimus->nimi', '$tellimus->email', '$tellimus->mustrinr', '$onloigatud_default', '$onvarvitud_default', '$onkomplekteeritud_default')";
 
         if ($conn->query($sql) === TRUE) {
             header("Location: riie.php");
