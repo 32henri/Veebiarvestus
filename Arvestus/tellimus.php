@@ -1,6 +1,6 @@
 <?php
 require('config.php');
-
+// defineerib tellimuse klassi
 class Tellimus {
     public $orderNumber;
     public $nimi;
@@ -20,38 +20,41 @@ class Tellimus {
         $this->onkomplekteeritud = ""; // Algselt tühi väärtus
     }
 }
-
+// genereerib suvalise numbri ja kontrollib et ei oleks liiga pikk
 function generateOrderNumber() {
     $prefix = 'ORD' . date('YmdHis');
     $randomPart = rand(1000, 9999);
 
-    // Calculate the remaining available characters for the random part
+    
     $remainingChars = 200 - strlen($prefix);
 
-    // Ensure the random part does not exceed the remaining characters
+    
     $randomPart = substr($randomPart, 0, $remainingChars);
 
     return $prefix . $randomPart;
 }
-
+// If päring
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // kontrollib kas väljad on määratud
     if (isset($_POST['nimi']) && isset($_POST['email']) && isset($_POST['mustrinr'])) {
         $nimi = $_POST['nimi'];
         $email = $_POST['email'];
         $mustrinr = $_POST['mustrinr'];
-
+        
+        //numbri genereerimine
         $orderNumber = generateOrderNumber();
+        // tellimuse objekt
         $tellimus = new Tellimus($orderNumber, $nimi, $email, $mustrinr);
         
-        // Default values
+        // väärtuseed
         $onloigatud_default = 'Ei';
         $onvarvitud_default = 'Ei';
         $onkomplekteeritud_default = 'Ei';
 
-        // Save order to the database with default values
+        // tellimus andmebaasi
         $sql = "INSERT INTO rulood (orderNumber, nimi, email, mustrinr, onloigatud, onvarvitud, onkomplekteeritud)
         VALUES ('$tellimus->orderNumber', '$tellimus->nimi', '$tellimus->email', '$tellimus->mustrinr', '$onloigatud_default', '$onvarvitud_default', '$onkomplekteeritud_default')";
-
+        // kontrollib kas päring õnnestub
         if ($conn->query($sql) === TRUE) {
             header("Location: riie.php");
             exit();

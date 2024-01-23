@@ -1,7 +1,6 @@
 <?php
 require('config.php');
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -9,7 +8,7 @@ if ($conn->connect_error) {
 $orders = [];
 $searchResults = '';
 
-// Fetch all data from the database
+// võtab andmed
 $sql = "SELECT * FROM rulood";
 $result = $conn->query($sql);
 
@@ -21,11 +20,28 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-// Handle form submission to get order status by name
+// Funktsioon tellimuste kuvamiseks
+function displayOrders($orderList)
+{
+    foreach ($orderList as $order) {
+        echo '<div class="order-container">';
+        echo "Tellimuse number: " . $order['orderNumber'] . "<br>";
+        echo "Nimi: " . $order['nimi'] . "<br>";
+        echo "E-mail: " . $order['email'] . "<br>";
+        echo "Mustri number: " . $order['mustrinr'] . "<br>";
+        echo "On lõigatud: " . $order['onloigatud'] . "<br>";
+        echo "On värvitud: " . $order['onvarvitud'] . "<br>";
+        echo "On komplekteeritud: " . $order['onkomplekteeritud'] . "<br>";
+        echo "</div>";
+        echo "<hr>";
+    }
+}
+
+// nime järgi tellimuse olek
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nimi']) && !empty($_POST['nimi'])) {
     $nimi = $_POST['nimi'];
 
-    // Filter orders with the provided name
+    // filter nimi
     $filteredOrders = array_filter($orders, function ($order) use ($nimi) {
         return strtolower($order['nimi']) == strtolower($nimi);
     });
@@ -62,7 +78,6 @@ $conn->close();
 </head>
 <body>
 
-<!-- Form to enter the name for order status -->
 <div class="order-container" style="float: left; margin-right: 20px;">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <label for="nimi">Sisesta oma nimi:</label>
@@ -70,28 +85,13 @@ $conn->close();
         <button type="submit" name="submit">Jälgi tellimust</button>
     </form>
 
-    <!-- Display search results or message -->
     <?php echo $searchResults; ?>
 </div>
 
-<!-- Display all orders if no name is searched -->
 <?php
-if (empty($_POST['nimi'])) {
-    foreach ($orders as $order) {
-        echo '<div class="order-container">';
-        echo "Tellimuse number: " . $order['orderNumber'] . "<br>";
-        echo "Nimi: " . $order['nimi'] . "<br>";
-        echo "E-mail: " . $order['email'] . "<br>";
-        echo "Mustri number: " . $order['mustrinr'] . "<br>";
-        echo "On lõigatud: " . $order['onloigatud'] . "<br>";
-        echo "On värvitud: " . $order['onvarvitud'] . "<br>";
-        echo "On komplekteeritud: " . $order['onkomplekteeritud'] . "<br>";
-        echo "</div>";
-        echo "<hr>";
-    }
-}
+// Kõikide tellimuste kuvamine
+displayOrders($orders);
 
-// Add a button in the top-left corner to link to "tellimu.php"
 echo '<button onclick="location.href=\'tellimus.php\'" style="position: absolute; top: 10px; left: 10px;">Tagasi</button>';
 ?>
 
